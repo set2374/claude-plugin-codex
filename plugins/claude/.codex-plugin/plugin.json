@@ -1,0 +1,40 @@
+{
+  "name": "claude",
+  "version": "0.1.0",
+  "description": "Use Claude from Codex to review legal deliverables, run adversarial critiques, or delegate general tasks. Symmetric to OpenAI's codex-plugin-cc on the Claude Code side.",
+  "author": {
+    "name": "set2374",
+    "url": "https://github.com/set2374"
+  },
+  "homepage": "https://github.com/set2374/claude-plugin-codex",
+  "repository": "https://github.com/set2374/claude-plugin-codex",
+  "license": "Apache-2.0",
+  "keywords": [
+    "claude",
+    "cross-model-review",
+    "legal",
+    "alp",
+    "litigusai",
+    "code-review",
+    "delegation"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Claude",
+    "shortDescription": "Invoke Claude from inside a Codex session",
+    "longDescription": "The Claude plugin is the symmetric counterpart to OpenAI's codex-plugin-cc. It exposes three skills inside Codex: claude-review (cross-model legal-document review through the claude-review MCP, round-capped per matter), claude-adversarial-review (devil's-advocate critique through the same MCP), and claude-rescue (general task delegation via the claude --print CLI for code, debugging, or non-legal investigation). Routing is automatic based on the work type — legal deliverables go through the round-capped MCP, everything else goes through the CLI.",
+    "developerName": "set2374",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/set2374/claude-plugin-codex",
+    "defaultPrompt": [
+      "Have Claude review this brief",
+      "Adversarial review with Claude",
+      "Delegate this debugging task to Claude"
+    ]
+  }
+}
