@@ -1,24 +1,21 @@
 ---
 name: claude-review
 description: |
-  Cross-model review of a legal document or analysis by Claude. Routes through the claude-review MCP (transport: Claude CLI in --print mode, with per-matter round capping). Use this skill when the user wants a second-model opinion on a legal deliverable — a memo, motion, brief, research summary, or strategic recommendation — and the goal is verification or critique rather than a tear-down.
-
-  Trigger phrases (non-exhaustive):
-    - "review with Claude"
-    - "have Claude review this"
-    - "second opinion from Claude"
-    - "cross-check this with Claude"
-    - "Claude review"
-    - "have a different model look at this"
-
-  This skill is the symmetric counterpart to the codex-plugin-cc /codex:review command on the Claude Code side. It routes through the bus-native cross-model review channel (claude-review MCP), not through ad-hoc claude CLI calls.
-
-  Do NOT use this skill for:
-    - Code review (use the claude-rescue skill or shell out to claude --print directly via Bash; this MCP is legal-review-focused)
-    - Adversarial / devil's-advocate review (use claude-adversarial-review)
-    - Multi-turn delegation or conversational investigation (use claude-rescue)
-    - Anything matter-locked beyond round 3 — the MCP enforces a 3-round cap per matter
+  Cross-model review of a legal deliverable (memo, motion, brief, strategic recommendation) by Claude through the claude-review MCP. Use when the user wants a second-model opinion or constructive critique on legal work. Triggers: "review with Claude", "have Claude review this", "second opinion from Claude", "cross-check this with Claude", "Claude review". Round-capped at 3 per matter. Do NOT use for code review (use claude-rescue), adversarial critique (use claude-adversarial-review), or multi-turn delegation (use claude-rescue or open Claude Code directly). Symmetric to codex-plugin-cc /codex:review.
 ---
+
+## When this skill matches
+
+Trigger phrases the model should also recognize:
+- "have a different model look at this"
+- explicit invocation by skill name
+
+## Do NOT use for
+
+- Code review or general analysis (claude-rescue or shell out to claude --print)
+- Adversarial / devil's-advocate critique (claude-adversarial-review)
+- Multi-turn delegation or conversational investigation (claude-rescue, or open Claude Code directly)
+- Matter-locked work beyond round 3 (MCP enforces a 3-round cap per matter)
 
 # Claude Review
 

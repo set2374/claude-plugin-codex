@@ -1,19 +1,7 @@
 ---
 name: claude-rescue
 description: |
-  Delegate an investigation, analysis, or task to Claude when Codex is stuck, wants a second implementation pass, or the work is better suited to Claude's reasoning style. This is the symmetric counterpart to the codex-plugin-cc /codex:rescue command on the Claude side. Unlike claude-review and claude-adversarial-review (which route through the legal-review MCP), this skill shells out to the `claude` CLI directly via Bash for general-purpose task delegation — code, analysis, drafting, debugging, or anything that does not fit the legal-document-review shape.
-
-  Trigger phrases (non-exhaustive):
-    - "ask Claude to investigate"
-    - "delegate this to Claude"
-    - "Claude rescue"
-    - "hand this to Claude"
-    - "have Claude figure this out"
-    - "I'm stuck — Claude help"
-    - "second implementation pass from Claude"
-    - "Claude take a crack at this"
-
-  Use one-shot. Resumable / multi-turn rescue is not yet supported in this skill (the underlying transport is `claude --print`); for sustained iteration with Claude, switch to Claude Code directly.
+  Delegate a general task to Claude when Codex is stuck, wants a second implementation pass, or the work suits Claude's reasoning style — code review, debugging, alternative drafts, deep non-legal investigation. Routes through the `claude --print` CLI directly (NOT the legal-review MCP, since this is general-purpose). Triggers: "ask Claude to investigate", "delegate this to Claude", "Claude rescue", "hand this to Claude", "have Claude figure this out", "I'm stuck — Claude help", "second implementation pass from Claude". One-shot only; for sustained multi-turn iteration, switch to Claude Code directly. Symmetric to codex-plugin-cc /codex:rescue.
 ---
 
 # Claude Rescue

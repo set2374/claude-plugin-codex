@@ -1,19 +1,7 @@
 ---
 name: claude-adversarial-review
 description: |
-  Aggressive devil's-advocate review of a legal document by Claude. Routes through the claude-review MCP. Use this skill when the user explicitly wants the work torn apart — every weakness flagged, every assumption challenged, no balanced "what works well" framing. The goal is to surface defects before opposing counsel or a court does.
-
-  Trigger phrases (non-exhaustive):
-    - "Claude critique"
-    - "have Claude tear this apart"
-    - "adversarial review with Claude"
-    - "stress-test this with Claude"
-    - "have Claude challenge this"
-    - "Claude devil's advocate"
-    - "what would Claude attack here"
-    - "find the holes"
-
-  This is the symmetric counterpart to the codex-plugin-cc /codex:adversarial-review command. Distinct from claude-review (constructive) and claude-rescue (delegation). All three exist in this ALP-aware Codex environment so the user can choose review posture explicitly.
+  Aggressive devil's-advocate review of a legal deliverable by Claude through the claude-review MCP. Defect-only output, no balanced framing — surfaces weaknesses before opposing counsel does. Triggers: "Claude critique", "have Claude tear this apart", "adversarial review with Claude", "stress-test this with Claude", "have Claude challenge this", "Claude devil's advocate", "find the holes". Same MCP and same per-matter 3-round cap as claude-review; distinct from claude-review (constructive) and claude-rescue (general delegation). Symmetric to codex-plugin-cc /codex:adversarial-review.
 ---
 
 # Claude Adversarial Review
