@@ -1,0 +1,27 @@
+{
+    "name": "claude-adversarial-review",
+    "version": "1.0.0",
+    "description": "MCP server for cross-model peer review of legal work via a configured review CLI",
+    "type": "module",
+    "scripts": {
+        "start": "node server.mjs",
+        "start:http": "node server.mjs --transport http",
+        "start:stdio": "node server.mjs --transport stdio"
+    },
+    "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.29.0",
+        "express": "^4.22.1",
+        "zod": "^3.25.76"
+    },
+    "overrides": {
+        "@hono/node-server": "^1.19.13",
+        "hono": "^4.12.14",
+        "express-rate-limit": "^8.3.2",
+        "express": {
+            "path-to-regexp": "0.1.13"
+        },
+        "router": {
+            "path-to-regexp": "^8.4.2"
+        }
+    }
+}

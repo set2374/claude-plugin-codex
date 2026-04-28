@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "claude-review": {
+      "command": "node",
+      "args": ["./mcp-server/server.mjs"],
+      "cwd": ".",
+      "env": {
+        "CLAUDE_PATH": "${CLAUDE_PATH:-claude}"
+      }
+    }
+  }
+}

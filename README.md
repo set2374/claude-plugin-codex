@@ -22,15 +22,22 @@ Selection rule: legal-deliverable review routes through the MCP (round-capped at
 
 ```
 claude-plugin-codex/
-├── .agents/plugins/marketplace.json    Codex marketplace manifest
-├── plugins/claude/                      The plugin
-│   ├── .codex-plugin/plugin.json        Codex plugin manifest
+├── .agents/plugins/marketplace.json     Codex marketplace manifest
+├── plugins/claude/                       The plugin
+│   ├── .codex-plugin/plugin.json         Codex plugin manifest
+│   ├── .mcp.json                         MCP server registration (auto-loaded by Codex)
+│   ├── mcp-server/                       Bundled claude-review MCP server source
+│   │   ├── server.mjs                    Server implementation
+│   │   ├── package.json                  Node deps; run `npm install` here once
+│   │   ├── package-lock.json
+│   │   └── .gitignore                    Excludes node_modules
 │   └── skills/
 │       ├── claude-review/SKILL.md
 │       ├── claude-adversarial-review/SKILL.md
 │       └── claude-rescue/SKILL.md
-├── README.md                            This file
-├── LICENSE                              Apache-2.0
+├── README.md                             This file
+├── CHANGELOG.md                          Version history
+├── LICENSE                               Apache-2.0
 └── .gitignore
 ```
 
@@ -38,34 +45,54 @@ claude-plugin-codex/
 
 - **Codex CLI** installed (`codex --version` works)
 - **Claude CLI** installed and authenticated (`claude --version` works)
-- **Node.js ≥ 18.18** for the `claude-review` MCP server
-- **`claude-review` MCP** registered with Codex. Verify with `codex mcp get claude-review`. If absent, register it from the MCP server source (the LitigusAI repository contains it at `2 - MCP Servers/claude-review-mcp/server.mjs`).
+- **Node.js ≥ 18.18** for the `claude-review` MCP server (bundled inside this plugin)
+
+The MCP server is bundled — you do **not** need the LitigusAI repository cloned. You do need to run `npm install` once inside `plugins/claude/mcp-server/` to install the server's runtime dependencies.
 
 ## Installation
 
 ### Option A — Install via Codex marketplace (preferred)
 
 ```bash
-# Clone the repository
+# 1. Clone the repository
 git clone https://github.com/set2374/claude-plugin-codex.git ~/Documents/GitHub/claude-plugin-codex
 
-# Add the local marketplace
+# 2. Install the bundled MCP server's runtime dependencies (once)
+cd ~/Documents/GitHub/claude-plugin-codex/plugins/claude/mcp-server && npm install
+
+# 3. Add the local marketplace to Codex
 codex plugin marketplace add ~/Documents/GitHub/claude-plugin-codex
 
-# Restart Codex (or start a new session); the plugin's skills auto-discover.
+# 4. Enable the plugin (one-time edit to ~/.codex/config.toml)
+cat >> ~/.codex/config.toml <<'EOF'
+
+[plugins."claude@claude-plugin-codex"]
+enabled = true
+EOF
+
+# 5. Start a new Codex session; the plugin's three skills and the
+#    claude-review MCP auto-load.
 ```
+
+The plugin's `.mcp.json` registers `claude-review` against the bundled server. If you already have a `claude-review` MCP registered with Codex pointing elsewhere (e.g., a development copy in a sibling repository), you should remove it via `codex mcp remove claude-review` before enabling this plugin to avoid the registration colliding.
 
 ### Option B — Symlink skills directly into Codex's skills directory
 
-If you do not want to register the marketplace and just want the skills:
+If you do not want to register the marketplace and just want the skills (you handle MCP registration yourself):
 
 ```bash
 git clone https://github.com/set2374/claude-plugin-codex.git ~/Documents/GitHub/claude-plugin-codex
+cd ~/Documents/GitHub/claude-plugin-codex/plugins/claude/mcp-server && npm install
+cd ~
 
 for skill in ~/Documents/GitHub/claude-plugin-codex/plugins/claude/skills/*/; do
   name="$(basename "$skill")"
   ln -sfn "$skill" ~/.codex/skills/"$name"
 done
+
+# Register the MCP yourself
+codex mcp add claude-review \
+  -- node "$HOME/Documents/GitHub/claude-plugin-codex/plugins/claude/mcp-server/server.mjs"
 ```
 
 Either way, `codex` will auto-discover the three skills and route to them based on natural-language triggers ("have Claude review this", "delegate to Claude", etc.) or skill name.
@@ -113,10 +140,10 @@ Codex's plugin model is centered on skills and MCP servers rather than slash com
 
 ## Roadmap
 
-- **v0.1 (this release):** Three skills shipped as a Codex plugin with marketplace manifest. Routes through the existing `claude-review` MCP and the `claude` CLI.
-- **v0.2:** Codex-side rescue-subagent equivalent. Optional bundled MCP registration so the plugin can ship its own `.mcp.json` rather than depending on out-of-band MCP registration.
-- **v0.3:** Resumable threads in the underlying MCP, mirroring `codex-plugin-cc`'s `--resume-last` capability.
-- **v0.4:** Marketplace publishing — list under a discoverable Codex marketplace URL once Codex's remote-marketplace fetcher is generally available.
+- **v0.1 — released 2026-04-27:** Three skills shipped as a Codex plugin with marketplace manifest. Routes through the existing `claude-review` MCP and the `claude` CLI. Required out-of-band MCP registration.
+- **v0.2 — released 2026-04-28 (current):** Bundled `claude-review` MCP server source inside the plugin. Plugin ships `.mcp.json` so the MCP auto-registers when the plugin is enabled. The plugin is no longer dependent on the LitigusAI repository being cloned. Skill descriptions tightened to fit Codex's 1024-character frontmatter limit (fixed a silent load failure on `claude-review` and `claude-rescue` from v0.1). See `CHANGELOG.md`.
+- **v0.3 (planned):** Resumable threads in the underlying MCP, mirroring `codex-plugin-cc`'s `--resume-last` capability for `claude-rescue`. Removes the one-shot constraint for multi-turn delegation.
+- **v0.4 (planned):** Marketplace publishing — list under a discoverable Codex marketplace URL once Codex's remote-marketplace fetcher is generally available. Auto-`npm install` for the bundled MCP server's dependencies on plugin install.
 
 ## License
 
